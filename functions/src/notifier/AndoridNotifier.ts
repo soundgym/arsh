@@ -33,7 +33,7 @@ export default class AndroidNotifier extends INotifier {
 
         return jwt.authorize()
             .then(credentials => {
-                return google.androidpublisher('v2').reviews.list({
+                return google.androidpublisher('v3').reviews.list({
                     auth:jwt,
                     packageName:this.config.appId
                 })
