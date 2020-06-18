@@ -20,38 +20,43 @@ export default abstract class INotifier {
     abstract fetchData():Promise<void>;
 
     public async execute(){
-        if (!this.reviews) {
-            throw Error('fetch reviews first');
-        }
-
-        const count = await this.getTaskCount();
-        if (count === 0) {
-
-            //check all review as marked
-            for (let i = 0; i < this.reviews.length; i++) {
-                await this.markAsPublished(this.reviews[i])
+        try {
+            if (!this.reviews) {
+                throw Error('fetch reviews first');
             }
-        } else {
-            //publish review
-            for (let i = 0; i < this.reviews.length; i++) {
-                const currentReview = this.reviews[i];
 
-                const isPublishedReview = await this.isPublished(currentReview);
+            const count = await this.getTaskCount();
+            if (count === 0) {
 
-                if (isPublishedReview) {
-                    continue;
+                //check all review as marked
+                for (let i = 0; i < this.reviews.length; i++) {
+                    await this.markAsPublished(this.reviews[i])
                 }
+            } else {
+                //publish review
+                for (let i = 0; i < this.reviews.length; i++) {
+                    const currentReview = this.reviews[i];
 
-                try {
-                    await this.publish(currentReview);
-                    await this.markAsPublished(currentReview);
-                } catch (e) {
-                    console.warn('review publish failed', currentReview.id);
+                    const isPublishedReview = await this.isPublished(currentReview);
+
+                    if (isPublishedReview) {
+                        continue;
+                    }
+
+                    try {
+                        await this.publish(currentReview);
+                        await this.markAsPublished(currentReview);
+                    } catch (e) {
+                        console.warn('review publish failed', currentReview.id);
+                    }
                 }
             }
-        }
 
-        await this.increaseTaskCount(count);
+            await this.increaseTaskCount(count);
+        } catch(error) {
+            console.error('Error on INotifier.execute()', error.message);
+            throw error;
+        }
     }
 
     async getTaskCount():Promise<number>{

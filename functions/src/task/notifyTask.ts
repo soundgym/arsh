@@ -20,10 +20,10 @@ export default function notifyToSlack(notifiers:Notifier[]){
                 return notifier.execute()
             })
             .then(() => {
-                return console.info(`Notify to slack success (${moment().format('YYYY.MM.DD HH:mm:ss')}): `, notifier.config.taskId);
+                return console.info(`[${notifier.config.platform.toUpperCase()}] Notify to slack success (${moment().format('YYYY.MM.DD HH:mm:ss')}): `, notifier.config.taskId);
             })
             .catch(e => {
-                return console.warn('Notify to slack failed: ', e.message);
+                return console.warn(`[${notifier.config.platform.toUpperCase()}] Notify to slack failed: `, e.message);
             })
 
     } else {

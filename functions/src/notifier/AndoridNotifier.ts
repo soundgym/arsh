@@ -17,6 +17,10 @@ export default class AndroidNotifier extends INotifier {
                     throw Error('there is no app data')
                 }
             })
+            .catch((error:Error) => {
+                console.error('Error on AndroidNotifier.init()', error.message);
+                throw error;
+            })
     }
 
     fetchData():Promise<void> {
@@ -67,6 +71,9 @@ export default class AndroidNotifier extends INotifier {
                 }));
 
                 return;
+            }).catch(error => {
+                console.error('Error on AndroidNotifier.fetchData()', error.message);
+                throw error;
             })
     }
 }
