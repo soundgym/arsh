@@ -18,7 +18,7 @@ admin.initializeApp({
         privateKey:account.private_key,
         clientEmail:account.client_email
     }),
-    databaseURL: "https://arsh-apps.firebaseio.com"
+    databaseURL: `https://${account.project_id}.firebaseio.com`
 });
 
 exports.reviewNotifier = functions.pubsub.schedule('every 6 minutes').onRun(async context => {
